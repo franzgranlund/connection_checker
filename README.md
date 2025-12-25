@@ -10,6 +10,42 @@ Run
 - python main.py
 - python main.py --config config.yaml
 
+Ubuntu 24.04 setup
+- sudo apt update
+- sudo apt install -y python3 python3-venv python3-pip git
+- git clone <repo-url> && cd system_check
+- python3 -m venv .venv
+- source .venv/bin/activate
+- pip install -r requirements.txt
+- edit config.yaml with your targets
+- python main.py --config config.yaml
+
+Scheduling (cron)
+- crontab -e
+- add a line like:
+  - */5 * * * * /usr/bin/env -i HOME="$HOME" PATH="/usr/bin:/bin" /path/to/system_check/.venv/bin/python /path/to/system_check/main.py --config /path/to/system_check/config.yaml >> /var/log/system_check.log 2>&1
+
+Scheduling (systemd timer)
+- create /etc/systemd/system/system-check.service:
+  - [Unit]
+    Description=System connection checker
+  - [Service]
+    Type=oneshot
+    WorkingDirectory=/path/to/system_check
+    ExecStart=/path/to/system_check/.venv/bin/python /path/to/system_check/main.py --config /path/to/system_check/config.yaml
+- create /etc/systemd/system/system-check.timer:
+  - [Unit]
+    Description=Run system checker every 5 minutes
+  - [Timer]
+    OnBootSec=1min
+    OnUnitActiveSec=5min
+    Persistent=true
+  - [Install]
+    WantedBy=timers.target
+- sudo systemctl daemon-reload
+- sudo systemctl enable --now system-check.timer
+- check status with: systemctl status system-check.timer
+
 Tests
 - pip install -r requirements-dev.txt
 - pytest
