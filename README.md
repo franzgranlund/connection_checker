@@ -26,22 +26,29 @@ Scheduling (cron)
   - */5 * * * * /usr/bin/env -i HOME="$HOME" PATH="/usr/bin:/bin" /path/to/system_check/.venv/bin/python /path/to/system_check/main.py --config /path/to/system_check/config.yaml >> /var/log/system_check.log 2>&1
 
 Scheduling (systemd timer)
-- create /etc/systemd/system/system-check.service:
-  - [Unit]
-    Description=System connection checker
-  - [Service]
-    Type=oneshot
-    WorkingDirectory=/path/to/system_check
-    ExecStart=/path/to/system_check/.venv/bin/python /path/to/system_check/main.py --config /path/to/system_check/config.yaml
-- create /etc/systemd/system/system-check.timer:
-  - [Unit]
-    Description=Run system checker every 5 minutes
-  - [Timer]
-    OnBootSec=1min
-    OnUnitActiveSec=5min
-    Persistent=true
-  - [Install]
-    WantedBy=timers.target
+- create /etc/systemd/system/system-check.service with this exact content:
+```ini
+[Unit]
+Description=System connection checker
+
+[Service]
+Type=oneshot
+WorkingDirectory=/path/to/system_check
+ExecStart=/path/to/system_check/.venv/bin/python /path/to/system_check/main.py --config /path/to/system_check/config.yaml
+```
+- create /etc/systemd/system/system-check.timer with this exact content:
+```ini
+[Unit]
+Description=Run system checker every 5 minutes
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=5min
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
 - sudo systemctl daemon-reload
 - sudo systemctl enable --now system-check.timer
 - check status with: systemctl status system-check.timer
