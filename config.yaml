@@ -1,0 +1,65 @@
+command: "echo all ok"
+fail_command: "echo one or more failed"
+
+checks:
+  - name: mysql-prod
+    type: mysql
+    host: mysql.example.com
+    port: 3306
+    timeout: 3
+    expect_protocol_version: 10
+    expect_server_version: "8."
+    command: "echo mysql ok"
+    fail_command: "echo mysql failed"
+
+  - name: public-api
+    type: http
+    url: https://api.example.com/health
+    method: GET
+    timeout: 5
+    expect_status: 200
+    expect_body_contains: "ok"
+    expect_json:
+      status: ok
+    command: "echo api ok"
+    fail_command: "echo api failed"
+
+  - name: tcp-banner
+    type: tcp
+    host: example.com
+    port: 22
+    timeout: 3
+    read_bytes: 128
+    expect_contains: "SSH-"
+    command: "echo ssh ok"
+    fail_command: "echo ssh failed"
+
+  - name: postgres-prod
+    type: postgres
+    host: postgres.example.com
+    port: 5432
+    timeout: 3
+    user: postgres
+    database: postgres
+    expect_auth_ok: false
+    command: "echo pg ok"
+    fail_command: "echo pg failed"
+
+  - name: rabbitmq-prod
+    type: rabbitmq
+    host: rabbitmq.example.com
+    port: 5672
+    timeout: 3
+    expect_version: "0-9-1"
+    command: "echo amqp ok"
+    fail_command: "echo amqp failed"
+
+  - name: udp-syslog
+    type: udp
+    host: syslog.example.com
+    port: 514
+    message: "ping"
+    timeout: 2
+    expect_response: false
+    command: "echo udp ok"
+    fail_command: "echo udp failed"
