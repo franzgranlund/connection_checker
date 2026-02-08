@@ -20,9 +20,7 @@ LOGGER = logging.getLogger("system_check")
 def setup_logging(level_name):
     level = logging.INFO
     if level_name:
-        level = logging.getLevelName(level_name.upper())
-        if not isinstance(level, int):
-            level = logging.INFO
+        level = getattr(logging, level_name.upper(), logging.INFO)
     logging.basicConfig(
         level=level,
         format="%(asctime)s %(levelname)s %(message)s",
