@@ -63,3 +63,12 @@ checks:
     expect_response: false
     command: "echo udp ok"
     fail_command: "echo udp failed"
+
+  - name: ping-public
+    type: icmp
+    host: 8.8.8.8
+    count: 2
+    timeout: 2
+    max_rtt_ms: 50
+    command: "echo ping ok"
+    fail_command: "echo ping failed"

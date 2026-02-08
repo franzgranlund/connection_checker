@@ -7,6 +7,8 @@ import sys
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+import pytest
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 import main
@@ -190,6 +192,13 @@ def test_rabbitmq_handshake_expectation():
     finally:
         server.shutdown()
         server.server_close()
+
+
+def test_icmp_ping():
+    ok, _msg = main.check_icmp({"host": "127.0.0.1", "count": 1, "timeout": 1})
+    if not ok:
+        pytest.skip("icmp ping blocked or unavailable")
+    assert ok
 
 
 def test_fail_command_runs_on_failure(tmp_path):
