@@ -1,3 +1,25 @@
+"""UDP check.
+
+Config keys:
+- host (str, required)
+- port (int, required)
+- timeout (float, optional, seconds, default 5)
+- message (str, optional, default "ping")
+- expect_response (bool, optional, default False)
+- read_bytes (int, optional, default 1024)
+- expect_contains (str, optional, substring match)
+- expect_regex (str, optional, regex match)
+
+Example:
+cfg = {
+    "host": "127.0.0.1",
+    "port": 9999,
+    "message": "ping",
+    "expect_response": True,
+    "expect_contains": "ping",
+}
+"""
+
 import socket
 
 from .util import matches_expect

@@ -1,3 +1,25 @@
+"""TCP check.
+
+Config keys:
+- host (str, required)
+- port (int, required)
+- timeout (float, optional, seconds, default 5)
+- send (str, optional, payload sent after connect)
+- read_bytes (int, optional, default 1024)
+- expect_contains (str, optional, substring match)
+- expect_regex (str, optional, regex match)
+
+Example:
+cfg = {
+    "host": "127.0.0.1",
+    "port": 22,
+    "timeout": 2,
+    "send": "hello",
+    "read_bytes": 64,
+    "expect_contains": "SSH-",
+}
+"""
+
 import socket
 import time
 

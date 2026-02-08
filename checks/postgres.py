@@ -1,3 +1,21 @@
+"""Postgres startup/auth check.
+
+Config keys:
+- host (str, required)
+- port (int, required)
+- timeout (float, optional, seconds, default 5)
+- user (str, optional, default "postgres")
+- database (str, optional, default "postgres")
+- expect_auth_ok (bool, optional, default False)
+
+Example:
+cfg = {
+    "host": "127.0.0.1",
+    "port": 5432,
+    "expect_auth_ok": True,
+}
+"""
+
 import socket
 
 from .util import read_exact

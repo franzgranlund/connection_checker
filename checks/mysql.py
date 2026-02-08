@@ -1,3 +1,21 @@
+"""MySQL handshake check.
+
+Config keys:
+- host (str, required)
+- port (int, required)
+- timeout (float, optional, seconds, default 5)
+- expect_protocol_version (int, optional, default 10)
+- expect_server_version (str, optional; substring or regex)
+- expect_server_version_regex (bool, optional, default False)
+
+Example:
+cfg = {
+    "host": "127.0.0.1",
+    "port": 3306,
+    "expect_server_version": "8.0",
+}
+"""
+
 import socket
 
 from .util import matches_expect, read_exact

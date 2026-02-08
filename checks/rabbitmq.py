@@ -1,3 +1,20 @@
+"""RabbitMQ AMQP header check.
+
+Config keys:
+- host (str, required)
+- port (int, required)
+- timeout (float, optional, seconds, default 5)
+- expect_protocol (str, optional, default "AMQP")
+- expect_version (str, optional, default "0-9-1")
+
+Example:
+cfg = {
+    "host": "127.0.0.1",
+    "port": 5672,
+    "expect_version": "0-9-1",
+}
+"""
+
 import socket
 
 from .util import read_exact

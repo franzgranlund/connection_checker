@@ -1,3 +1,28 @@
+"""HTTP check.
+
+Config keys:
+- url (str, required)
+- method (str, optional, default "GET")
+- timeout (float, optional, seconds, default 5)
+- headers (dict, optional)
+- body (str, optional)
+- json (dict, optional; sets Content-Type if missing)
+- expect_status (int or list[int], optional, default 200)
+- expect_headers (dict, optional; exact match, case-insensitive keys)
+- expect_headers_regex (bool, optional, default False)
+- expect_body_contains (str, optional)
+- expect_body_regex (str, optional)
+- expect_json (dict, optional; dot-paths to expected values)
+
+Example:
+cfg = {
+    "url": "http://127.0.0.1:8080/health",
+    "expect_status": 200,
+    "expect_headers": {"X-Test": "yes"},
+    "expect_json": {"status": "ok"},
+}
+"""
+
 import json
 import re
 import urllib.request
