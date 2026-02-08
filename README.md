@@ -6,6 +6,13 @@ Setup
 - Create/activate the venv.
 - Install dependencies from requirements.txt.
 
+Example:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
 Run
 - python main.py
 - python main.py --config config.yaml
