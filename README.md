@@ -84,7 +84,7 @@ Config
 - checks: list of connection checks
 - Each check supports:
   - name: label for logging
-  - type: tcp | udp | http | mysql | postgres | rabbitmq
+  - type: tcp | udp | http | icmp | mysql | postgres | rabbitmq
   - command: shell command to run when the check succeeds
   - fail_command: shell command to run when the check fails
 
@@ -127,6 +127,11 @@ RabbitMQ
 - host, port, timeout
 - expect_protocol (default AMQP)
 - expect_version (default 0-9-1)
+
+ICMP
+- host, count (default 1), timeout (default 2)
+- max_rtt_ms: fail if average round-trip time exceeds this value
+- uses system `ping`; availability/permissions vary by OS
 
 Exit code
 - 0 when all checks and commands succeed

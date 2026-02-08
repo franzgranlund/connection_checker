@@ -7,6 +7,7 @@ import sys
 import yaml
 
 from checks.http import check_http
+from checks.icmp import check_icmp
 from checks.mysql import check_mysql
 from checks.postgres import check_postgres
 from checks.rabbitmq import check_rabbitmq
@@ -54,6 +55,8 @@ def run_checks(config):
             ok, msg = check_udp(item)
         elif ctype == "http":
             ok, msg = check_http(item)
+        elif ctype == "icmp":
+            ok, msg = check_icmp(item)
         elif ctype == "mysql":
             ok, msg = check_mysql(item)
         elif ctype == "postgres":
