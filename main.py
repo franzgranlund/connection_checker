@@ -1,4 +1,5 @@
 import argparse
+import logging
 import shlex
 import subprocess
 import sys
@@ -12,6 +13,20 @@ from checks.rabbitmq import check_rabbitmq
 from checks.tcp import check_tcp
 from checks.udp import check_udp
 
+
+LOGGER = logging.getLogger("system_check")
+
+
+def setup_logging(level_name):
+    level = logging.INFO
+    if level_name:
+        level = logging.getLevelName(level_name.upper())
+        if not isinstance(level, int):
+            level = logging.INFO
+    logging.basicConfig(
+        level=level,
+        format="%(asctime)s %(levelname)s %(message)s",
+    )
 
 
 def run_command(command):
@@ -28,7 +43,7 @@ def run_command(command):
 def run_checks(config):
     checks = config.get("checks", [])
     if not isinstance(checks, list):
-        print("config error: checks must be a list")
+        LOGGER.error("config error: checks must be a list")
         return 1
 
     any_failed = False
@@ -50,22 +65,24 @@ def run_checks(config):
         else:
             ok, msg = False, f"unknown type: {ctype}"
 
-        status = "ok" if ok else "fail"
-        print(f"[{status}] {name}: {msg}")
+        if ok:
+            LOGGER.info("[ok] %s: %s", name, msg)
+        else:
+            LOGGER.warning("[fail] %s: %s", name, msg)
 
         if ok:
             command = item.get("command")
             if command:
                 cmd_ok = run_command(command)
                 if not cmd_ok:
-                    print(f"[fail] {name}: command failed")
+                    LOGGER.error("[fail] %s: command failed", name)
                     any_failed = True
         else:
             fail_command = item.get("fail_command")
             if fail_command:
                 cmd_ok = run_command(fail_command)
                 if not cmd_ok:
-                    print(f"[fail] {name}: fail command failed")
+                    LOGGER.error("[fail] %s: fail command failed", name)
             any_failed = True
 
     if any_failed:
@@ -73,14 +90,14 @@ def run_checks(config):
         if fail_command:
             cmd_ok = run_command(fail_command)
             if not cmd_ok:
-                print("[fail] global fail_command failed")
+                LOGGER.error("[fail] global fail_command failed")
         return 1
 
     command = config.get("command")
     if command:
         cmd_ok = run_command(command)
         if not cmd_ok:
-            print("[fail] global command failed")
+            LOGGER.error("[fail] global command failed")
             return 1
     return 0
 
@@ -93,16 +110,22 @@ def main():
         default="config.yaml",
         help="path to config YAML (default: config.yaml)",
     )
+    parser.add_argument(
+        "--log-level",
+        default="INFO",
+        help="logging level (default: INFO)",
+    )
     args = parser.parse_args()
+    setup_logging(args.log_level)
 
     try:
         with open(args.config, "r", encoding="utf-8") as f:
             config = yaml.safe_load(f) or {}
     except OSError as exc:
-        print(f"failed to read config: {exc}")
+        LOGGER.error("failed to read config: %s", exc)
         return 1
     except yaml.YAMLError as exc:
-        print(f"invalid yaml: {exc}")
+        LOGGER.error("invalid yaml: %s", exc)
         return 1
 
     return run_checks(config)

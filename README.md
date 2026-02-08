@@ -16,6 +16,7 @@ pip install -r requirements.txt
 Run
 - python main.py
 - python main.py --config config.yaml
+- python main.py --log-level DEBUG
 
 Development setup
 - Create/activate the venv and install dev dependencies.
