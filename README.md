@@ -10,6 +10,19 @@ Run
 - python main.py
 - python main.py --config config.yaml
 
+Development setup
+- Create/activate the venv and install dev dependencies.
+- Run tests and type checks.
+
+Example:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt -r requirements-dev.txt
+pytest
+mypy .
+```
+
 Ubuntu 24.04 setup
 - sudo apt update
 - sudo apt install -y python3 python3-venv python3-pip git
